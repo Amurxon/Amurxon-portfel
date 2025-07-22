@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Buyurtma shakli</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+
+    .form-box {
+      position: relative;
+      background: white;
+      padding: 25px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-box" id="formBox">
+  <button class="close-btn" onclick="closeForm()">×</button>
+  <h2>Buyurtma berish</h2>
+  
+  <input type="text" id="name" placeholder="Ismingiz" required>
+  <input type="text" id="project" placeholder="Loyiha turi (masalan: Telegram bot)" required>
+  <textarea id="desc" placeholder="Tafsilotlar..." rows="4"></textarea>
+  <input type="text" id="promo" placeholder="Promo kod (ixtiyoriy)">
+  
+  <button onclick="sendOrder()">Yuborish</button>
+</div>
+
+<script>
+  function closeForm() {
+    document.getElementById("formBox").style.display = "none";
+  }
+
+  function sendOrder() {
+    const name = document.getElementById("name").value.trim();
+    const project = document.getElementById("project").value.trim();
+    const desc = document.getElementById("desc").value.trim();
+    const promo = document.getElementById("promo").value.trim();
+
+    if (!name || !project) {
+      alert("Iltimos, ism va loyiha turini kiriting.");
+      return;
+    }
+
+    let message = `🆕 Yangi zakaz!\n👤 Ism: ${name}\n💡 Loyiha: ${project}\n📋 Tafsilot: ${desc}`;
+
+    if (promo !== "") {
+      message += `\n🎁 Promo kod ham bor: ${promo}`;
+    }
+
+    const token = '8134060532:AAEYVaz5kAs05PIbOfOty77Dzkfev-1jKVA';
+    const chatId = '7786081868';
+    const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+    const data = {
+      chat_id: chatId,
+      text: message
+    };
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    }).then(response => {
+      if (response.ok) {
+        alert("Buyurtmangiz yuborildi!");
+        document.getElementById("name").value = "";
+        document.getElementById("project").value = "";
+        document.getElementById("desc").value = "";
+        document.getElementById("promo").value = "";
+      } else {
+        alert("Xatolik yuz berdi. Iltimos, keyinroq urinib ko‘ring.");
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
